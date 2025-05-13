@@ -1,7 +1,5 @@
-import 'dart:async';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Timer',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -37,18 +36,8 @@ class HomePageState extends State<HomePage> {
   int counter = t;
   bool _isActive = false;
 
-  late AudioPlayer audioPlayer = AudioPlayer();
-
-  @override
-  void initState() {
-    audioPlayer = AudioPlayer();
-
-    super.initState();
-  }
-
   @override
   void dispose() {
-    audioPlayer.dispose();
     timer.cancel();
     super.dispose();
   }
@@ -80,7 +69,6 @@ class HomePageState extends State<HomePage> {
           counter -= 1;
         });
       } else {
-        audioPlayer.play(AssetSource('audio/done.wav'));
         reset();
       }
     });
