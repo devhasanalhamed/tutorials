@@ -8,12 +8,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Timer',
+      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
@@ -26,40 +24,18 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  HomePageState createState() => HomePageState();
+  State<StatefulWidget> createState() => HomePageState();
 }
 
-const int t = 10; // seconds
+const int initialTime = 300; // five minutes
 
 class HomePageState extends State<HomePage> {
+  int counter = initialTime;
   late Timer timer;
-  int counter = t;
+
   bool _isActive = false;
 
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
   void start() {
-    setState(() {
-      _isActive = true;
-      setTimer();
-    });
-  }
-
-  void reset() {
-    if (_isActive) {
-      timer.cancel();
-      setState(() {
-        _isActive = false;
-        counter = t;
-      });
-    }
-  }
-
-  void setTimer() {
     setState(() {
       _isActive = true;
     });
@@ -72,6 +48,22 @@ class HomePageState extends State<HomePage> {
         reset();
       }
     });
+  }
+
+  void reset() {
+    if (_isActive) {
+      timer.cancel();
+      setState(() {
+        _isActive = false;
+        counter = initialTime;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    reset();
+    super.dispose();
   }
 
   @override
@@ -88,49 +80,40 @@ class HomePageState extends State<HomePage> {
             child: Center(
               child: Text(
                 time,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 54.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 56.0, fontWeight: FontWeight.bold),
               ),
             ),
           ),
           if (!_isActive)
-            CustomElevatedButton(title: 'Start', onPressed: start),
+            ElevatedButton(
+              onPressed: start,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                fixedSize: Size.fromHeight(64.0),
+                shape: LinearBorder(),
+              ),
+              child: Text(
+                'Start',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+
           if (_isActive)
-            CustomElevatedButton(
-              title: 'Reset',
+            ElevatedButton(
               onPressed: reset,
-              backgroundColor: Colors.amber,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.white,
+                fixedSize: Size.fromHeight(64.0),
+                shape: LinearBorder(),
+              ),
+              child: Text(
+                'Reset',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-class CustomElevatedButton extends StatelessWidget {
-  final String title;
-  final VoidCallback onPressed;
-  final Color backgroundColor;
-  const CustomElevatedButton({
-    super.key,
-    required this.title,
-    required this.onPressed,
-    this.backgroundColor = Colors.deepPurple,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        foregroundColor: Colors.white,
-        fixedSize: Size.fromHeight(64.0),
-        shape: LinearBorder(),
-      ),
-      child: Text(
-        title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
       ),
     );
   }
